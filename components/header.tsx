@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Menu, X, Phone, Mail, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import Image from 'next/image'
 
 const navigation = [
   { name: 'A PRINCIPIO', href: '/' },
@@ -55,13 +56,7 @@ export default function Header() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-10 w-10 rounded-full bg-[#014127] flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg text-[#014127]">SALVATTO</span>
-                <span className="text-xs text-gray-600">INMOBILIARIA</span>
-              </div>
+              <Image src="/LOGO1.jpeg" alt="Salvatto Inmobiliaria" width={100} height={100} />
             </Link>
 
             {/* Desktop Navigation */}
