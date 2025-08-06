@@ -76,7 +76,7 @@ export interface Publication {
 }
 
 export async function fetchPublications(limit: number): Promise<Publication[]> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/publications?limit=${limit}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}publications?limit=${limit}`);
   if (!response.ok) {
     throw new Error('Error fetching publications');
   }
