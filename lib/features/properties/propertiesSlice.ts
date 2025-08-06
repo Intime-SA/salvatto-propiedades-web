@@ -46,3 +46,40 @@ const propertiesSlice = createSlice({
 
 export const { setFilters, clearFilters, setCurrentPage, setItemsPerPage } = propertiesSlice.actions
 export default propertiesSlice.reducer
+
+export interface Publication {
+  _id: string;
+  category: string;
+  operationType: string;
+  address: string;
+  province: string;
+  city: string;
+  neighborhood: string;
+  hideExactAddress: boolean;
+  photos: string[];
+  totalSurface: number;
+  coveredSurface: number;
+  rooms: number;
+  bedrooms: number;
+  bathrooms: number;
+  parkingSpaces: number;
+  title: string;
+  description: string;
+  videoUrl: string;
+  price: number;
+  currency: string;
+  expenses: number;
+  features: string[];
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function fetchPublications(limit: number): Promise<Publication[]> {
+  const response = await fetch(`http://localhost:3001/api/publications?limit=${limit}`);
+  if (!response.ok) {
+    throw new Error('Error fetching publications');
+  }
+  const data = await response.json();
+  return data.data.publications;
+}

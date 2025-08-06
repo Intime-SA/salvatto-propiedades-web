@@ -2,11 +2,9 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import PropertyFilter from './property-filter'
 
 const heroImages = [
   '/placeholder.svg?height=600&width=1200',
@@ -37,7 +35,7 @@ export default function HeroSection() {
             }`}
           >
             <Image
-              src={image || "/placeholder.svg"}
+              src={"https://images.unsplash.com/photo-1561815907-c39c3c1c7f49?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8J21hciUyMGRlbCUyMHBsYXRhJ3xlbnwwfHwwfHx8MA%3D%3D"}
               alt={`Propiedad destacada ${index + 1}`}
               fill
               className="object-cover"
@@ -66,90 +64,8 @@ export default function HeroSection() {
         <ChevronRight className="h-6 w-6" />
       </Button>
 
-      {/* Content */}
-      <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold mb-8">
-          Entendemos el valor de su patrimonio
-        </h1>
-
-        {/* Search Form */}
-        <div className="bg-white rounded-lg p-8 shadow-2xl max-w-3xl mx-auto border border-gray-200">
-          <Tabs defaultValue="urbano" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="urbano" className="data-[state=active]:bg-[#014127] data-[state=active]:text-white text-gray-700 hover:text-[#014127]">
-                DIVISIÓN URBANO
-              </TabsTrigger>
-             
-            </TabsList>
-            
-            <TabsContent value="urbano" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Input
-                  placeholder="Buscar por código"
-                  className="text-gray-900 border border-gray-300 focus:border-[#014127] focus:ring-[#014127]"
-                />
-                <Select>
-                  <SelectTrigger className="text-gray-900 border border-gray-300 focus:border-[#014127] focus:ring-[#014127]">
-                    <SelectValue placeholder="Tipo de Propiedad" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="casa">Casa</SelectItem>
-                    <SelectItem value="departamento">Departamento</SelectItem>
-                    <SelectItem value="ph">PH</SelectItem>
-                    <SelectItem value="local">Local</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select>
-                  <SelectTrigger className="text-gray-900 border border-gray-300 focus:border-[#014127] focus:ring-[#014127]">
-                    <SelectValue placeholder="Operación" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="venta">Venta</SelectItem>
-                    <SelectItem value="alquiler">Alquiler</SelectItem>
-                    <SelectItem value="temporario">Alquiler Temporario</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button className="bg-[#014127] hover:bg-[#014127]/90 text-white font-semibold">
-                  <Search className="h-4 w-4 mr-2" />
-                  Buscar
-                </Button>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="campos" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Input
-                  placeholder="Buscar por código"
-                  className="text-gray-900 border border-gray-300 focus:border-[#014127] focus:ring-[#014127]"
-                />
-                <Select>
-                  <SelectTrigger className="text-gray-900 border border-gray-300 focus:border-[#014127] focus:ring-[#014127]">
-                    <SelectValue placeholder="Tipo de Campo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="agricola">Agrícola</SelectItem>
-                    <SelectItem value="ganadero">Ganadero</SelectItem>
-                    <SelectItem value="mixto">Mixto</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select>
-                  <SelectTrigger className="text-gray-900 border border-gray-300 focus:border-[#014127] focus:ring-[#014127]">
-                    <SelectValue placeholder="Operación" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="venta">Venta</SelectItem>
-                    <SelectItem value="alquiler">Alquiler</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button className="bg-[#014127] hover:bg-[#014127]/90 text-white font-semibold">
-                  <Search className="h-4 w-4 mr-2" />
-                  Buscar
-                </Button>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
+\
+        <PropertyFilter />
 
       {/* Dots Indicator */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">

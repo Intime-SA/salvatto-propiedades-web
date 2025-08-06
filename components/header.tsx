@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Menu, X, Phone, Mail, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import Image from 'next/image'
 
 const navigation = [
   { name: 'A PRINCIPIO', href: '/' },
@@ -32,26 +32,36 @@ export default function Header() {
     <>
       {/* Top Contact Bar */}
       <div className="bg-[#014127] text-white py-2 px-4">
-        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center text-sm">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              <span>223-4851202 / 223 614 1251</span>
+        <div className="container mx-auto">
+          <div className="hidden md:flex justify-between items-center text-sm">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                <span>223-4851202 / 223 614 1251</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                <span>info@salvattoinmobiliaria.com.ar</span>
+              </div>
             </div>
             <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              <span>info@salvattoinmobiliaria.com.ar</span>
+              <MapPin className="h-4 w-4" />
+              <span>Av. de los Trabajadores Nº 3771, Mar del Plata</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 mt-2 sm:mt-0">
-            <MapPin className="h-4 w-4" />
-            <span>Av. de los Trabajadores Nº 3771, Mar del Plata</span>
+          
+          {/* Mobile version - simplified */}
+          <div className="md:hidden text-center text-sm">
+            <div className="flex items-center justify-center gap-2">
+              <Phone className="h-4 w-4" />
+              <span>223-4851202</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Navigation */}
-      <header className={`sticky top-0 z-50 w-full border-b bg-white transition-shadow ${isScrolled ? 'shadow-md' : ''}`}>
+      <header className={`sticky top-0 z-50 w-full border-b bg-[#F7F7F7] transition-shadow ${isScrolled ? 'shadow-md' : ''}`}>
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
@@ -60,14 +70,15 @@ export default function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-6">
+            <nav className="hidden lg:flex items-center space-x-1">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-sm font-medium text-gray-700 hover:text-[#014127] transition-colors"
+                  className="relative px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#014127] transition-all duration-300 rounded-md hover:bg-[#014127]/5 group"
                 >
                   {item.name}
+                  <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-[#014127] transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
                 </Link>
               ))}
             </nav>
@@ -80,18 +91,38 @@ export default function Header() {
                   <span className="sr-only">Abrir menú</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <nav className="flex flex-col space-y-4 mt-6">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="text-lg font-medium text-gray-700 hover:text-[#014127] transition-colors py-2"
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </nav>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-[white]">
+                <div className="flex flex-col h-full">
+                  {/* Mobile Logo */}
+                  
+                  
+                  {/* Mobile Navigation */}
+                  <nav className="flex flex-col space-y-2 mt-6 flex-1">
+                    {navigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="text-lg font-medium text-gray-700 hover:text-[#014127] hover:bg-[#014127]/5 transition-all duration-300 py-3 px-4 rounded-lg border-l-4 border-transparent hover:border-[#014127]"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </nav>
+                  
+                  {/* Mobile Contact Info */}
+                  <div className="border-t p-6 mt-auto space-y-3">
+                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <Phone className="h-4 w-4 text-[#014127]" />
+                      <div>
+                        <div>223-4851202</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <Mail className="h-4 w-4 text-[#014127]" />
+                      <span>info@salvattoinmobiliaria.com.ar</span>
+                    </div>
+                  </div>
+                </div>
               </SheetContent>
             </Sheet>
           </div>

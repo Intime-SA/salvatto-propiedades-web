@@ -23,7 +23,7 @@ export default function AboutSection() {
           
           <div className="relative">
             <Image
-              src="/placeholder.svg?height=400&width=600"
+              src="https://images.unsplash.com/photo-1561816544-21ecbffa09a3?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8J21hciUyMGRlbCUyMHBsYXRhJ3xlbnwwfHwwfHx8MA%3D%3D"
               alt="Equipo Salvatto Inmobiliaria"
               width={600}
               height={400}
