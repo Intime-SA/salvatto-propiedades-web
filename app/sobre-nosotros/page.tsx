@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
-import LayoutLanding from "../LayoutLanding"
+import LayoutLanding from "@/components/LayoutLanding"
 
 export default function SobreNosotrosPage() {
   return (

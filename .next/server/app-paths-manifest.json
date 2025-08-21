@@ -1,8 +1,9 @@
 {
-  "/propiedades/page": "app/propiedades/page.js",
-  "/tasacion/page": "app/tasacion/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/contacto/page": "app/contacto/page.js",
-  "/sobre-nosotros/page": "app/sobre-nosotros/page.js",
   "/page": "app/page.js",
-  "/propiedades/[category]/page": "app/propiedades/[category]/page.js"
+  "/tasacion/page": "app/tasacion/page.js",
+  "/sobre-nosotros/page": "app/sobre-nosotros/page.js",
+  "/propiedades/[category]/page": "app/propiedades/[category]/page.js",
+  "/propiedades/page": "app/propiedades/page.js"
 }

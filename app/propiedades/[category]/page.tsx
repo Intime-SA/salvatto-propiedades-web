@@ -1,17 +1,13 @@
-import LayoutLanding from '@/app/LayoutLanding'
-import React from 'react'
+import PropiedadesLayout from '../layout';
 
-const page = ({ params }: { params: { category: string } }  ) => {
-    const { category } = params;
-    console.log(category, 'category');
-
+const page = ({ params }: { params: { category: string } }) => {
   return (
-    <LayoutLanding page='propiedades'>
-        <div>
-            <h1>Propiedades {category}</h1>
-        </div>
-    </LayoutLanding>
-  )
-}
+    <PropiedadesLayout params={params}>
+      <div>
+        <h1>Propiedades {params.category}</h1>
+      </div>
+    </PropiedadesLayout>
+  );
+};
 
-export default page 
+export default page; 

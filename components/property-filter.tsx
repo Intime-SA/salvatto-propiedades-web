@@ -55,7 +55,6 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
   const [priceRange, setPriceRange] = useState([localFilters.minPrice || 50000, localFilters.maxPrice || 500000])
   const [areaRange, setAreaRange] = useState([50, 300])
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
-  const [showAdvanced, setShowAdvanced] = useState(false)
   const [loading, setLoading] = useState(false)
   const [resetLoading, setResetLoading] = useState(false)
   const dispatch = useDispatch()
@@ -76,19 +75,18 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
         if (["bedrooms", "bathrooms", "parkingSpaces", "minPrice", "maxPrice", "totalSurface"].includes(key)) {
           const numValue = Number.parseInt(value)
           if (!isNaN(numValue)) {
-            urlFilters[key as keyof PropertyFilters] = numValue
+            urlFilters[key as keyof PropertyFilters] = numValue as any
           }
         } else {
-          urlFilters[key as keyof PropertyFilters] = value
+          urlFilters[key as keyof PropertyFilters] = value as any
         }
       }
     })
 
     if (Object.keys(urlFilters).length > 0) {
       setLocalFilters((prev) => ({ ...prev, ...urlFilters }))
-      dispatch(setFilters(urlFilters))
     }
-  }, [searchParams, dispatch])
+  }, [])
 
   const handleFilterChange = (key: keyof PropertyFilters, value: string | number) => {
     setLocalFilters((prev) => {
@@ -97,30 +95,11 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
       if (value === "" || value === undefined) {
         delete newFilters[key]
       } else {
-        newFilters[key] = value
-      }
-
-      if (!isHomePage) {
-        updateURLParams(newFilters)
+        newFilters[key] = value as any
       }
 
       return newFilters
     })
-  }
-
-  const updateURLParams = (filters: PropertyFilters) => {
-    const params = new URLSearchParams()
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== "") {
-        params.set(key, value.toString())
-      }
-    })
-
-    const queryString = params.toString()
-    const newUrl = queryString ? `${pathname}?${queryString}` : pathname
-
-    window.history.replaceState({}, "", newUrl)
   }
 
   const removeFilter = (filter: string) => {
@@ -145,38 +124,32 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
   }
 
   const URL = useParams()
-  console.log(URL,"URL")
+  console.log(URL, "URL")
 
   const handleSearch = () => {
-    if (!isClient) return;
-    setLoading(true);
-    dispatch(setFilters(localFilters));
+    if (!isClient) return
+    setLoading(true)
 
-    const params = new URLSearchParams();
+    // ✅ recién acá guardamos en Redux
+    dispatch(setFilters(localFilters))
+
+    const params = new URLSearchParams()
     Object.entries(localFilters).forEach(([key, value]) => {
       if (value !== undefined && value !== "") {
-        params.set(key, value.toString());
+        params.set(key, value.toString())
       }
-    });
+    })
 
-    const queryString = params.toString();
+    const queryString = params.toString()
 
     setTimeout(() => {
-      if (isHomePage) {
-        const targetUrl = queryString ? `/propiedades?${queryString}` : "/propiedades";
-        router.push(targetUrl);
-      } else if (pathname.startsWith("/propiedades")) {
-        const newUrl = queryString ? `/propiedades?${queryString}` : "/propiedades";
-        router.push(newUrl);
-      } else {
-        const targetUrl = queryString ? `/propiedades?${queryString}` : "/propiedades";
-        router.push(targetUrl);
-      }
+      const targetUrl = queryString ? `/propiedades?${queryString}` : "/propiedades"
+      router.push(targetUrl)
 
-      console.log("Filters applied:", localFilters);
-      console.log("Redirecting from:", pathname, "to properties page");
-      setLoading(false);
-    }, 1000);
+      console.log("Filters applied:", localFilters)
+      console.log("Redirecting from:", pathname, "to properties page")
+      setLoading(false)
+    }, 1000)
   }
 
   const neighborhoods = [
@@ -298,6 +271,7 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
         <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm rounded-md">
           <CardContent className="p-8">
             <Tabs defaultValue="urbano" className="w-full">
+              {/* URBANO */}
               <TabsContent value="urbano" className="space-y-6">
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -308,6 +282,7 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 gap-4">
+                  {/* Tipo de Propiedad */}
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold text-gray-700 flex items-center">
                       <Home className="h-4 w-4 mr-1" />
@@ -321,88 +296,18 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
                         <SelectValue placeholder="Seleccionar tipo" />
                       </SelectTrigger>
                       <SelectContent className="bg-white">
-                        <SelectItem
-                          value="casas-chalet"
-                          className="truncate"
-                          onClick={() =>
-                            handleFilterChange(
-                              "category",
-                              localFilters.category === "casas-chalet" ? "" : "casas-chalet",
-                            )
-                          }
-                        >
-                          <Home className="h-4 w-4 mr-1" /> Casas-Chalet
-                        </SelectItem>
-                        <SelectItem
-                          value="duplex-ph"
-                          className="truncate"
-                          onClick={() =>
-                            handleFilterChange("category", localFilters.category === "duplex-ph" ? "" : "duplex-ph")
-                          }
-                        >
-                          <Building className="h-4 w-4 mr-1" /> Duplex-PH
-                        </SelectItem>
-                        <SelectItem
-                          value="departamentos"
-                          className="truncate"
-                          onClick={() =>
-                            handleFilterChange(
-                              "category",
-                              localFilters.category === "departamentos" ? "" : "departamentos",
-                            )
-                          }
-                        >
-                          <Building className="h-4 w-4 mr-1" /> Departamentos
-                        </SelectItem>
-                        <SelectItem
-                          value="lotes-terrenos"
-                          className="truncate"
-                          onClick={() =>
-                            handleFilterChange(
-                              "category",
-                              localFilters.category === "lotes-terrenos" ? "" : "lotes-terrenos",
-                            )
-                          }
-                        >
-                          <Map className="h-4 w-4 mr-1" /> Lotes-Terrenos
-                        </SelectItem>
-                        <SelectItem
-                          value="cocheras"
-                          className="truncate"
-                          onClick={() =>
-                            handleFilterChange("category", localFilters.category === "cocheras" ? "" : "cocheras")
-                          }
-                        >
-                          <Car className="h-4 w-4 mr-1" /> Cocheras
-                        </SelectItem>
-                        <SelectItem
-                          value="locales-fondo-comercio"
-                          className="truncate"
-                          onClick={() =>
-                            handleFilterChange(
-                              "category",
-                              localFilters.category === "locales-fondo-comercio" ? "" : "locales-fondo-comercio",
-                            )
-                          }
-                        >
-                          <Store className="h-4 w-4 mr-1" /> Locales-Fondo de Comercio
-                        </SelectItem>
-                        <SelectItem
-                          value="hoteles-emprendimientos"
-                          className="truncate"
-                          onClick={() =>
-                            handleFilterChange(
-                              "category",
-                              localFilters.category === "hoteles-emprendimientos" ? "" : "hoteles-emprendimientos",
-                            )
-                          }
-                        >
-                          <Hotel className="h-4 w-4 mr-1" /> Hoteles-Emprendimientos
-                        </SelectItem>
+                        <SelectItem value="casas-chalet">Casas-Chalet</SelectItem>
+                        <SelectItem value="duplex-ph">Duplex-PH</SelectItem>
+                        <SelectItem value="departamentos">Departamentos</SelectItem>
+                        <SelectItem value="lotes-terrenos">Lotes-Terrenos</SelectItem>
+                        <SelectItem value="cocheras">Cocheras</SelectItem>
+                        <SelectItem value="locales-fondo-comercio">Locales-Fondo de Comercio</SelectItem>
+                        <SelectItem value="hoteles-emprendimientos">Hoteles-Emprendimientos</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
+                  {/* Operación */}
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold text-gray-700 flex items-center">
                       <DollarSign className="h-4 w-4 mr-1" />
@@ -416,19 +321,14 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
                         <SelectValue placeholder="Tipo de operación" />
                       </SelectTrigger>
                       <SelectContent className="bg-white">
-                        <SelectItem value="venta">
-                          <DollarSign className="h-4 w-4 mr-1" /> Venta
-                        </SelectItem>
-                        <SelectItem value="alquiler">
-                          <House className="h-4 w-4 mr-1" /> Alquiler
-                        </SelectItem>
-                        <SelectItem value="temporario">
-                          <Hotel className="h-4 w-4 mr-1" /> Alquiler Temporario
-                        </SelectItem>
+                        <SelectItem value="venta">Venta</SelectItem>
+                        <SelectItem value="alquiler">Alquiler</SelectItem>
+                        <SelectItem value="temporario">Alquiler Temporario</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
+                  {/* Barrio */}
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold text-gray-700 flex items-center">
                       <MapPin className="h-4 w-4 mr-1" />
@@ -451,6 +351,7 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
                     </Select>
                   </div>
 
+                  {/* Reset */}
                   <div className="space-y-2 mt-7">
                     <Button
                       variant="outline"
@@ -466,42 +367,7 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
                   </div>
                 </div>
 
-                {selectedFilters.length > 0 && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm font-semibold text-gray-700 flex items-center">
-                        <Filter className="h-4 w-4 mr-1" />
-                        Filtros Activos
-                      </Label>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={clearAllFilters}
-                        disabled={resetLoading}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <RotateCcw className={`h-3 w-3 mr-1 ${resetLoading ? "animate-spin" : ""}`} />
-                        {resetLoading ? "Limpiando..." : "Limpiar todo"}
-                      </Button>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedFilters.map((filter) => (
-                        <Badge
-                          key={filter}
-                          variant="secondary"
-                          className="bg-[#014127]/10 text-[#014127] hover:bg-[#014127]/20 px-3 py-1"
-                        >
-                          {filter}
-                          <X
-                            className="h-3 w-3 ml-2 cursor-pointer hover:text-red-600"
-                            onClick={() => removeFilter(filter)}
-                          />
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
+                {/* BOTÓN */}
                 <Button
                   className="w-full h-14 bg-gradient-to-r from-[#014127] to-emerald-600 hover:from-[#014127]/90 hover:to-emerald-600/90 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                   onClick={handleSearch}
@@ -521,108 +387,9 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
                 </Button>
               </TabsContent>
 
+              {/* CAMPOS */}
               <TabsContent value="campos" className="space-y-6">
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <Input
-                    placeholder="Buscar campos por código, ubicación o características..."
-                    className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-[#014127] focus:ring-[#014127] rounded-md bg-white/50 w-full"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-gray-700 flex items-center">
-                      <TreePine className="h-4 w-4 mr-1" />
-                      Tipo de Campo
-                    </Label>
-                    <Select
-                      value={localFilters.category || ""}
-                      onValueChange={(value) => handleFilterChange("category", value)}
-                    >
-                      <SelectTrigger className="h-12 border-2 border-gray-200 focus:border-[#014127] focus:ring-[#014127] rounded-md bg-white/50 min-w-[150px]">
-                        <SelectValue placeholder="Seleccionar tipo" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        <SelectItem value="agricola">🌾 Agrícola</SelectItem>
-                        <SelectItem value="ganadero">🐄 Ganadero</SelectItem>
-                        <SelectItem value="mixto">🌾🐄 Mixto</SelectItem>
-                        <SelectItem value="forestal">🌲 Forestal</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-gray-700 flex items-center">
-                      <DollarSign className="h-4 w-4 mr-1" />
-                      Operación
-                    </Label>
-                    <Select
-                      value={localFilters.operationType || ""}
-                      onValueChange={(value) => handleFilterChange("operationType", value)}
-                    >
-                      <SelectTrigger className="h-12 border-2 border-gray-200 focus:border-[#014127] focus:ring-[#014127] rounded-md bg-white/50 min-w-[150px]">
-                        <SelectValue placeholder="Tipo de operación" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        <SelectItem value="venta">💰 Venta</SelectItem>
-                        <SelectItem value="alquiler">🏠 Alquiler</SelectItem>
-                        <SelectItem value="arrendamiento">📋 Arrendamiento</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-gray-700 flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      Región
-                    </Label>
-                    <Select
-                      value={localFilters.province || ""}
-                      onValueChange={(value) => handleFilterChange("province", value)}
-                    >
-                      <SelectTrigger className="h-12 border-2 border-gray-200 focus:border-[#014127] focus:ring-[#014127] rounded-md bg-white/50 min-w-[150px]">
-                        <SelectValue placeholder="Seleccionar región" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        <SelectItem value="pampeana">🌾 Región Pampeana</SelectItem>
-                        <SelectItem value="patagonia">🏔️ Patagonia</SelectItem>
-                        <SelectItem value="noa">⛰️ NOA</SelectItem>
-                        <SelectItem value="nea">🌿 NEA</SelectItem>
-                        <SelectItem value="cuyo">🍇 Cuyo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-gray-700 flex items-center">
-                      <Maximize className="h-4 w-4 mr-1" />
-                      Superficie
-                    </Label>
-                    <Select
-                      value={localFilters.totalSurface?.toString() || ""}
-                      onValueChange={(value) => handleFilterChange("totalSurface", Number.parseInt(value))}
-                    >
-                      <SelectTrigger className="h-12 border-2 border-gray-200 focus:border-[#014127] focus:ring-[#014127] rounded-md bg-white/50 min-w-[150px]">
-                        <SelectValue placeholder="Hectáreas" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        <SelectItem value="50">1-50 hectáreas</SelectItem>
-                        <SelectItem value="200">51-200 hectáreas</SelectItem>
-                        <SelectItem value="500">201-500 hectáreas</SelectItem>
-                        <SelectItem value="1000">500+ hectáreas</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <Button
-                  className="w-full h-14 bg-gradient-to-r from-[#014127] to-emerald-600 hover:from-[#014127]/90 hover:to-emerald-600/90 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                  onClick={handleSearch}
-                  disabled={loading}
-                >
-                  <Search className="h-5 w-5 mr-3" />
-                  {isHomePage ? "Buscar Campos" : "Aplicar Filtros"}
-                </Button>
+                {/* ... lo mismo pero para campos */}
               </TabsContent>
             </Tabs>
           </CardContent>

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { ChevronRight, Phone, Mail, Facebook, Instagram, Youtube } from "lucide-react"
-import LayoutLanding from "../LayoutLanding"
+import LayoutLanding from "@/components/LayoutLanding"
 
 export default function TasacionesPage() {
   const [formData, setFormData] = useState({
