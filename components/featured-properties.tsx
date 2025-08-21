@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { MapPin, Bed, Bath, Car, Maximize } from 'lucide-react'
-import type { RootState } from '@/lib/store'
+import type { RootState } from '@/lib/redux/store'
 
 // Type definition for the API property structure
 interface ApiProperty {

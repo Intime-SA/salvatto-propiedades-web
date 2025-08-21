@@ -7,12 +7,11 @@ import { Button } from '@/components/ui/button'
 import PropertyFilter from './property-filter'
 
 const heroImages = [
-  '/placeholder.svg?height=600&width=1200',
-  '/placeholder.svg?height=600&width=1200',
-  '/placeholder.svg?height=600&width=1200',
+  'https://images.unsplash.com/photo-1561815907-c39c3c1c7f49?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8J21hciUyMGRlbCUyMHBsYXRhJ3xlbnwwfHwwfHx8MA%3D%3D',
+  '/modern-minimalist-office.jpg',
 ]
 
-export default function HeroSection() {
+export default function HeroSection({ page }: { page?: string | null }) {
   const [currentImage, setCurrentImage] = useState(0)
 
   const nextImage = () => {
@@ -24,25 +23,23 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center">
+    <section className={`relative ${page == null ? 'h-[70vh]' : 'h-[40vh]'} flex items-start justify-center`}>
       {/* Background Image Slider */}
       <div className="absolute inset-0 overflow-hidden">
-        {heroImages.map((image, index) => (
+
           <div
-            key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentImage ? 'opacity-100' : 'opacity-0'
+              currentImage === 0 ? 'opacity-100' : 'opacity-0'
             }`}
           >
             <Image
-              src={"https://images.unsplash.com/photo-1561815907-c39c3c1c7f49?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8J21hciUyMGRlbCUyMHBsYXRhJ3xlbnwwfHwwfHx8MA%3D%3D"}
-              alt={`Propiedad destacada ${index + 1}`}
+              src={page == null ? heroImages[0] : heroImages[1]}
+              alt={`Propiedad destacada`}
               fill
               className="object-cover"
-              priority={index === 0}
+              priority={currentImage === 0}
             />
           </div>
-        ))}
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
@@ -64,8 +61,7 @@ export default function HeroSection() {
         <ChevronRight className="h-6 w-6" />
       </Button>
 
-\
-        <PropertyFilter />
+      {page == null && <PropertyFilter />}
 
       {/* Dots Indicator */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">

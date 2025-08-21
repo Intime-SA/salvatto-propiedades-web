@@ -1,16 +1,23 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
-interface PropertyFilters {
-  operation?: string
-  type?: string
-  location?: string
+export interface PropertyFilters {
+  operationType?: string
+  category?: string
+  province?: string
+  city?: string
+  neighborhood?: string
+  totalSurface?: number
+  coveredSurface?: number
+  parkingSpaces?: number
+  rooms?: number
   minPrice?: number
   maxPrice?: number
   bedrooms?: number
   bathrooms?: number
+  status?: string
 }
 
-interface PropertiesState {
+export interface PropertiesState {
   filters: PropertyFilters
   currentPage: number
   itemsPerPage: number
@@ -23,7 +30,7 @@ const initialState: PropertiesState = {
 }
 
 const propertiesSlice = createSlice({
-  name: 'properties',
+  name: "properties",
   initialState,
   reducers: {
     setFilters: (state, action: PayloadAction<PropertyFilters>) => {
@@ -48,38 +55,38 @@ export const { setFilters, clearFilters, setCurrentPage, setItemsPerPage } = pro
 export default propertiesSlice.reducer
 
 export interface Publication {
-  _id: string;
-  category: string;
-  operationType: string;
-  address: string;
-  province: string;
-  city: string;
-  neighborhood: string;
-  hideExactAddress: boolean;
-  photos: string[];
-  totalSurface: number;
-  coveredSurface: number;
-  rooms: number;
-  bedrooms: number;
-  bathrooms: number;
-  parkingSpaces: number;
-  title: string;
-  description: string;
-  videoUrl: string;
-  price: number;
-  currency: string;
-  expenses: number;
-  features: string[];
-  status: string;
-  createdAt: string;
-  updatedAt: string;
+  _id: string
+  category: string
+  operationType: 'alquiler' | 'venta' | 'temporario'
+  address: string
+  province: string
+  city: string
+  neighborhood: string
+  hideExactAddress: boolean
+  photos: string[]
+  totalSurface: number
+  coveredSurface: number
+  rooms: number
+  bedrooms: number
+  bathrooms: number
+  parkingSpaces: number
+  title: string
+  description: string
+  videoUrl: string
+  price: number
+  currency: string
+  expenses: number
+  features: string[]
+  status: string
+  createdAt: string
+  updatedAt: string
 }
 
 export async function fetchPublications(limit: number): Promise<Publication[]> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/publications?limit=${limit}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/publications?limit=${limit}`)
   if (!response.ok) {
-    throw new Error('Error fetching publications');
+    throw new Error("Error fetching publications")
   }
-  const data = await response.json();
-  return data.data.publications;
+  const data = await response.json()
+  return data.data.publications
 }
